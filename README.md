@@ -31,60 +31,47 @@ Advanced Threat Detection using AI & ML is a security tool that simulates, detec
 - **Frontend**: HTML, CSS, JavaScript (with Bootstrap)
 
 ## Installation
-### Prerequisites
-Ensure you have the following installed:
-- Python 3.x
-- Pip
-- Virtual Environment (optional but recommended)
-- PyCharm (Recommended IDE)
-
-### Setup Instructions
-1. **Clone the Repository**:
+### Steps to Run the Project (Works on Windows, Linux, and macOS)
+1. **Download the Project**:
+   - Clone the repository using Git:
    ```bash
    git clone https://github.com/yourusername/advanced-threat-detection.git
-   cd advanced-threat-detection
    ```
-2. **Open Project in PyCharm**:
-   - Open PyCharm and select **File > Open**.
-   - Navigate to the cloned project folder and open it.
-3. **Create and Activate Virtual Environment (Optional)**:
-   - In PyCharm, open the terminal and run:
+2. **Open in PyCharm**:
+   - Open PyCharm and navigate to the project folder.
+3. **Install Required Pip Modules**:
+   - Open the terminal in PyCharm and run:
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install flask requests random json os datetime
    ```
-4. **Install Dependencies**:
-   - In PyCharm terminal, run:
-   ```bash
-   pip install -r requirements.txt
+4. **Set Up Groq API Key**:
+   - Get your API key from [Groq Console](https://console.groq.com/keys)
+   - Open `app.py` and add the following line:
+   ```python
+   # Updated Groq API key
+   GROQ_API_KEY = "your-api-key-here"
    ```
-5. **Set Up Environment Variables** (e.g., Groq API Key):
-   ```bash
-   export GROQ_API_KEY='your-api-key'
-   ```
-   - On Windows, use:
-   ```powershell
-   set GROQ_API_KEY=your-api-key
-   ```
-6. **Run the Application**:
+5. **Run the Project**:
    - In PyCharm, open `app.py` and click the **Run** button or run in terminal:
    ```bash
    python app.py
    ```
-7. **Access the Web Interface**:
-   - Open `http://127.0.0.1:5000/` in your browser.
+6. **Access the Web Interface**:
+   - The terminal will display a link. Open that link in your browser.
+   - Example: `http://127.0.0.1:5000/`
 
-## Usage
-- Click **"Simulate Attack"** to generate 10 random attacks.
-- Click **"AI Attack"** to generate an AI-based attack via Meta Llama.
-- Click **"Train Model"** to train the Random Forest model.
-- View logs and blacklist IPs as needed.
+---
+
+## Screenshots
+(Add screenshots of the application here)
+
+---
 
 ## Contributing
 Feel free to contribute by submitting pull requests, reporting issues, or suggesting improvements.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Credits
+Special thanks to [Santhosh D](https://github.com/santhoshD123) for his guides that helped me understand AI.
 
 ## Contact
-For any queries or collaborations, contact **Gokul P** at [your email].
+For any doubts, contact me on **Telegram**: [@Gokul0x50](https://t.me/gokul0x50)
