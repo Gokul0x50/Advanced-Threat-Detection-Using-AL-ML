@@ -63,7 +63,22 @@ Advanced Threat Detection using AI & ML is a security tool that simulates, detec
 ---
 
 ## Screenshots
-(Add screenshots of the application here)
+
+### Dashboard with Detection Output
+![Dashboard](Screenshots/1.png)
+
+### Attacker IP Block button
+![Attack Detection](Screenshots/2.png)
+
+
+### Attack Simulation buttons
+![Attack Detection](Screenshots/3.png)
+
+### Live attack logs page
+![Charts](Screenshots/4.png)
+
+### Code Running and link generation
+![Charts](Screenshots/5.png)
 
 ---
 
