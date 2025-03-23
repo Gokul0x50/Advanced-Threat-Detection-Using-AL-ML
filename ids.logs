@@ -1,0 +1,7 @@
+{"timestamp": "2025-02-28 19:37:05", "type": "XSS", "severity": "Low", "description": "Cross-site Scripting", "details": "Malicious scripts injected into web pages", "ip": "127.0.0.1"}
+{"timestamp": "2025-02-28 19:37:06", "type": "SQL", "severity": "High", "description": "Database Attack", "details": "Malicious SQL queries attempting to manipulate database", "ip": "127.0.0.1"}
+{"timestamp": "2025-02-28 19:37:07", "type": "DDOS", "severity": "High", "description": "Denial of Service", "details": "Overwhelming system resources", "ip": "127.0.0.1"}
+{"timestamp": "2025-02-28 19:37:08", "type": "BRUTEFORCE", "severity": "Medium", "description": "Password Attack", "details": "Repeated login attempts", "ip": "127.0.0.1"}
+{"timestamp": "2025-02-28 19:37:09", "type": "MITM", "severity": "Medium", "description": "Man in the Middle", "details": "Intercepting network traffic", "ip": "127.0.0.1"}
+{"timestamp": "2025-02-28 19:37:21", "type": "XSS", "severity": "Low", "description": "Cross-site Scripting", "details": "Malicious scripts injected into web pages", "ip": "127.0.0.1"}
+{"timestamp": "2025-02-28 19:39:54", "type": "XSS", "severity": "Low", "description": "Cross-site Scripting", "details": "Malicious scripts injected into web pages", "ip": "127.0.0.1"}

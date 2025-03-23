@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IDS/IPS Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .severity-low { background-color: rgba(34, 197, 94, 0.1); border-left: 4px solid rgb(34, 197, 94); }
+        .severity-medium { background-color: rgba(234, 179, 8, 0.1); border-left: 4px solid rgb(234, 179, 8); }
+        .severity-high { background-color: rgba(239, 68, 68, 0.1); border-left: 4px solid rgb(239, 68, 68); }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            color: white;
+            display: none;
+            z-index: 1000;
+        }
+        .notification.success { background-color: rgb(34, 197, 94); }
+        .notification.error { background-color: rgb(239, 68, 68); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Notification Element -->
+    <div id="notification" class="notification"></div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">IDS/IPS Dashboard</h1>
+                </div>
+                <div class="flex items-center">
+                    <a href="/live-logs" class="ml-4 text-blue-500 hover:text-blue-700 font-medium">
+                        Live Logs
+                    </a>
+                    <span class="mx-2 text-gray-300">|</span>
+                    <button id="refresh-btn" class="text-blue-500 hover:text-blue-700 font-medium">
+                        Refresh Data
+                    </button>
+                    <span id="current-time" class="ml-4 text-gray-600"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Dashboard Overview -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">System Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Total Attacks Card -->
+                <div class="bg-white rounded-lg shadow p-6 card">
+                    <h3 class="text-sm font-medium text-gray-500 uppercase">Total Attacks</h3>
+                    <p class="mt-2 text-3xl font-bold text-gray-900" id="total-attacks">0</p>
+                    <div class="mt-1 text-sm text-gray-600">
+                        Last 24 hours
+                    </div>
+                </div>
+
+                <!-- High Severity Card -->
+                <div class="bg-white rounded-lg shadow p-6 card">
+                    <h3 class="text-sm font-medium text-gray-500 uppercase">High Severity</h3>
+                    <p class="mt-2 text-3xl font-bold text-red-600" id="high-severity">0</p>
+                    <div class="mt-1 text-sm text-gray-600">
+                        Critical threats
+                    </div>
+                </div>
+
+                <!-- Medium Severity Card -->
+                <div class="bg-white rounded-lg shadow p-6 card">
+                    <h3 class="text-sm font-medium text-gray-500 uppercase">Medium Severity</h3>
+                    <p class="mt-2 text-3xl font-bold text-yellow-600" id="medium-severity">0</p>
+                    <div class="mt-1 text-sm text-gray-600">
+                        Warning level
+                    </div>
+                </div>
+
+                <!-- Low Severity Card -->
+                <div class="bg-white rounded-lg shadow p-6 card">
+                    <h3 class="text-sm font-medium text-gray-500 uppercase">Low Severity</h3>
+                    <p class="mt-2 text-3xl font-bold text-green-600" id="low-severity">0</p>
+                    <div class="mt-1 text-sm text-gray-600">
+                        Informational
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+            <!-- Attack Types Chart -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Attack Distribution</h3>
+                    <div class="h-64">
+                        <canvas id="attack-types-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Severity Distribution Chart -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Severity Distribution</h3>
+                    <div class="h-64">
+                        <canvas id="severity-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Attacks Table -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Recent Attacks</h3>
+                    <a href="/live-logs" class="text-blue-500 hover:text-blue-700 text-sm font-medium">View All →</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Attack Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Severity</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-attacks-body" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Add this to your HTML for blocking controls -->
+<div class="bg-white rounded-lg shadow mt-8">
+    <div class="p-6">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">IP Access Control</h2>
+        <div class="mb-4">
+            <input type="text" id="ip-to-block" placeholder="Enter IP address" class="border rounded px-3 py-2 mr-2">
+            <button onclick="blockIP()" class="bg-red-500 text-white px-4 py-2 rounded">Block IP</button>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="blocked-ips-table" class="bg-white divide-y divide-gray-200"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+        <!-- Simulation Controls -->
+        <div class="bg-white rounded-lg shadow mt-8">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900 mb-4">Attack Simulation</h2>
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <button onclick="simulateAttack('xss')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+                        <h3 class="font-medium text-gray-900">XSS Attack</h3>
+                        <p class="text-sm text-gray-500">Cross-site Scripting</p>
+                    </button>
+                    <button onclick="simulateAttack('sql')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+                        <h3 class="font-medium text-gray-900">SQL Injection</h3>
+                        <p class="text-sm text-gray-500">Database Attack</p>
+                    </button>
+                    <button onclick="simulateAttack('ddos')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+                        <h3 class="font-medium text-gray-900">DDoS Attack</h3>
+                        <p class="text-sm text-gray-500">Denial of Service</p>
+                    </button>
+                    <button onclick="simulateAttack('bruteforce')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+                        <h3 class="font-medium text-gray-900">Brute Force</h3>
+                        <p class="text-sm text-gray-500">Password Attack</p>
+                    </button>
+                    <button onclick="simulateAttack('mitm')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+                        <h3 class="font-medium text-gray-900">MITM Attack</h3>
+                        <p class="text-sm text-gray-500">Man in the Middle</p>
+                    </button>
+                    <button onclick="simulateMultipleAttacks()" class="bg-red-500 text-white px-4 py-2 rounded shadow-md hover:bg-red-700">
+    Simulate 10 Attacks
+</button>
+                    <button onclick="clearLogs()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800">
+    Clear Attack Logs
+</button>
+                    <button onclick="simulateAIAttack()" class="attack-card bg-indigo-50 border-indigo-200 border-2 rounded-lg p-4 text-left hover:shadow-lg">
+        <h3 class="font-medium text-indigo-900">AI Attack</h3>
+        <p class="text-sm text-indigo-500">Generate New Pattern</p>
+    </button>
+    <button onclick="simulateMultipleAIAttacks()" class="attack-card bg-purple-50 border-purple-200 border-2 rounded-lg p-4 text-left hover:shadow-lg">
+        <h3 class="font-medium text-purple-900">Multiple AI Attacks</h3>
+        <p class="text-sm text-purple-500">Generate 3 New Patterns</p>
+    </button>
+                    <!-- Add a button for AI model training -->
+    <button onclick="trainAIModel()" class="bg-indigo-600 text-white px-4 py-2 rounded">Train AI Detection Model</button>
+
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global variables for charts
+        let attackTypesChart;
+        let severityChart;
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString();
+        }
+
+        // Add these functions to your JavaScript section
+function simulateAIAttack() {
+    fetch("/api/simulate/ai-attack", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        showNotification(`AI Attack simulated: ${data.details.type} - ${data.severity} Severity`, 'success');
+        // Force immediate data update
+        fetchDashboardData();
+    })
+    .catch(error => {
+        console.error("Error simulating AI attack:", error);
+        showNotification('Error simulating AI attack', 'error');
+    });
+}
+
+function simulateMultipleAIAttacks() {
+    fetch("/api/generate-ai-attacks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ count: 3 })
+    })
+    .then(response => response.json())
+    .then(data => {
+        showNotification("3 AI attacks simulated!", 'success');
+        fetchDashboardData();  // Ensure dashboard updates after simulation
+    })
+    .catch(error => {
+        console.error("Error simulating AI attacks:", error);
+        showNotification('Error simulating AI attacks', 'error');
+    });
+}
+
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Simulate an attack
+        function simulateAttack(type) {
+            fetch(`/api/simulate/${type}`, {
+                method: "POST"
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(`${data.message} - ${data.severity} Severity`, 'success');
+                // Force immediate data update
+                fetchDashboardData();
+            })
+            .catch(error => {
+                console.error("Error simulating attack:", error);
+                showNotification('Error simulating attack', 'error');
+            });
+        }
+
+        // Fetch all dashboard data
+        function fetchDashboardData() {
+            fetch("/api/logs")
+                .then(response => response.json())
+                .then(data => {
+                    updateDashboardStats(data);
+                    updateRecentAttacks(data);
+                    updateCharts(data);
+                })
+                .catch(error => {
+                    console.error("Error fetching dashboard data:", error);
+                    showNotification('Error loading dashboard data', 'error');
+                });
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats(data) {
+            // Count attacks by severity
+            let highCount = 0;
+            let mediumCount = 0;
+            let lowCount = 0;
+
+            data.forEach(item => {
+                if (item.severity && item.severity.toLowerCase() === 'high') {
+                    highCount++;
+                } else if (item.severity && item.severity.toLowerCase() === 'medium') {
+                    mediumCount++;
+                } else if (item.severity && item.severity.toLowerCase() === 'low') {
+                    lowCount++;
+                }
+            });
+
+            // Update counters
+            document.getElementById('total-attacks').textContent = data.length;
+            document.getElementById('high-severity').textContent = highCount;
+            document.getElementById('medium-severity').textContent = mediumCount;
+            document.getElementById('low-severity').textContent = lowCount;
+        }
+
+        // Replace your updateRecentAttacks function with this:
+function updateRecentAttacks(data) {
+    // Sort data by timestamp (newest first)
+    data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    // Get only the 5 most recent attacks
+    const recentAttacks = data.slice(0, 5);
+
+    const tableBody = document.getElementById("recent-attacks-body");
+    tableBody.innerHTML = '';
+
+    recentAttacks.forEach(attack => {
+        const row = document.createElement("tr");
+
+        // Determine severity class
+        let severityClass = "";
+        if (attack.severity && attack.severity.toLowerCase() === "low") {
+            severityClass = "text-green-600";
+        } else if (attack.severity && attack.severity.toLowerCase() === "medium") {
+            severityClass = "text-yellow-600";
+        } else if (attack.severity && attack.severity.toLowerCase() === "high") {
+            severityClass = "text-red-600";
+        }
+
+        // Check if AI-generated
+        const aiGenerated = attack.ai_generated ?
+            '<span class="ai-badge">AI</span>' : '';
+
+        row.innerHTML = `
+            <td class="px-6 py-4 text-sm text-gray-900">${attack.timestamp}</td>
+            <td class="px-6 py-4 text-sm font-medium text-gray-900">${attack.type} ${aiGenerated}</td>
+            <td class="px-6 py-4 text-sm ${severityClass} font-medium">${attack.severity || 'Unknown'}</td>
+            <td class="px-6 py-4 text-sm text-gray-500">${attack.ip}</td>
+            <td class="px-6 py-4 text-sm text-gray-500">${attack.description || ''}</td>
+        `;
+
+        // Add special class for AI-generated attacks
+        if (attack.ai_generated) {
+            row.classList.add('ai-generated');
+        }
+
+        tableBody.appendChild(row);
+    });
+}
+
+        // Update charts
+        function updateCharts(data) {
+            // Count attack types
+            const attackTypes = {};
+            const severityCounts = {
+                'High': 0,
+                'Medium': 0,
+                'Low': 0,
+                'Unknown': 0
+            };
+
+            data.forEach(attack => {
+                // Attack types chart data
+                if (attack.type) {
+                    const type = attack.type.toUpperCase();
+                    attackTypes[type] = (attackTypes[type] || 0) + 1;
+                }
+
+                // Severity chart data
+                if (attack.severity && attack.severity.toLowerCase() === 'high') {
+                    severityCounts['High']++;
+                } else if (attack.severity && attack.severity.toLowerCase() === 'medium') {
+                    severityCounts['Medium']++;
+                } else if (attack.severity && attack.severity.toLowerCase() === 'low') {
+                    severityCounts['Low']++;
+                } else {
+                    severityCounts['Unknown']++;
+                }
+            });
+
+            // Build datasets for charts
+            const attackTypesData = {
+                labels: Object.keys(attackTypes),
+                datasets: [{
+                    data: Object.values(attackTypes),
+                    backgroundColor: [
+                        '#3B82F6', // blue-500
+                        '#EF4444', // red-500
+                        '#10B981', // green-500
+                        '#F59E0B', // amber-500
+                        '#6366F1'  // indigo-500
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+
+            const severityData = {
+                labels: Object.keys(severityCounts),
+                datasets: [{
+                    data: Object.values(severityCounts),
+                    backgroundColor: [
+                        '#EF4444', // red-500 (High)
+                        '#F59E0B', // amber-500 (Medium)
+                        '#10B981', // green-500 (Low)
+                        '#6B7280'  // gray-500 (Unknown)
+                    ],
+                    hoverOffset: 4
+                }]
+            };
+
+            // Update or create charts
+            if (attackTypesChart) {
+                attackTypesChart.data = attackTypesData;
+                attackTypesChart.update();
+            } else {
+                const attackTypesCtx = document.getElementById('attack-types-chart').getContext('2d');
+                attackTypesChart = new Chart(attackTypesCtx, {
+                    type: 'pie',
+                    data: attackTypesData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                            },
+                        }
+                    }
+                });
+            }
+
+            if (severityChart) {
+                severityChart.data = severityData;
+                severityChart.update();
+            } else {
+                const severityCtx = document.getElementById('severity-chart').getContext('2d');
+                severityChart = new Chart(severityCtx, {
+                    type: 'pie',
+                    data: severityData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                            },
+                        }
+                    }
+                });
+            }
+        }
+
+            function simulateMultipleAttacks() {
+        fetch("/api/generate-sample-data", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ count: 10 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert("10 attacks simulated!");
+            fetchDashboardData();  // Ensure dashboard updates after simulation
+        })
+        .catch(error => console.error("Error simulating attacks:", error));
+    }
+
+    function clearLogs() {
+        if (confirm("Are you sure you want to delete all attack logs?")) {
+            fetch("/api/clear-logs", {
+                method: "POST"
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+
+                // Reset all dashboard stats
+                document.getElementById('total-attacks').textContent = "0";
+                document.getElementById('high-severity').textContent = "0";
+                document.getElementById('medium-severity').textContent = "0";
+                document.getElementById('low-severity').textContent = "0";
+
+                // Reset the pie charts to empty
+                if (attackTypesChart) {
+                    attackTypesChart.data.labels = [];
+                    attackTypesChart.data.datasets[0].data = [];
+                    attackTypesChart.update();
+                }
+
+                if (severityChart) {
+                    severityChart.data.datasets[0].data = [0, 0, 0];
+                    severityChart.update();
+                }
+
+                // Clear recent attack logs
+                document.getElementById("recent-attacks-body").innerHTML = "";
+
+                // Fetch fresh data to ensure attack simulation works after clearing
+                fetchDashboardData();
+            })
+            .catch(error => console.error("Error clearing logs:", error));
+        }
+    }
+
+    // Function to block an IP
+function blockIP() {
+    const ip = document.getElementById('ip-to-block').value;
+    if (!ip) return;
+
+    fetch(`/api/block/${ip}`, {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        showNotification(`IP ${ip} has been blocked`, 'success');
+        fetchBlockedIPs();
+    })
+    .catch(error => {
+        console.error("Error blocking IP:", error);
+        showNotification('Error blocking IP', 'error');
+    });
+}
+
+// Function to unblock an IP
+function unblockIP(ip) {
+    fetch(`/api/unblock/${ip}`, {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        showNotification(`IP ${ip} has been unblocked`, 'success');
+        fetchBlockedIPs();
+    })
+    .catch(error => {
+        console.error("Error unblocking IP:", error);
+        showNotification('Error unblocking IP', 'error');
+    });
+}
+
+// Fetch blocked IPs
+function fetchBlockedIPs() {
+    fetch("/api/blocked-ips")
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById("blocked-ips-table");
+            tableBody.innerHTML = '';
+
+            data.blocked_ips.forEach(ip => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td class="px-6 py-4 text-sm text-gray-900">${ip}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        <button onclick="unblockIP('${ip}')" class="text-red-500 hover:text-red-700">Unblock</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error("Error fetching blocked IPs:", error);
+        });
+}
+
+// Train AI model
+function trainAIModel() {
+    fetch("/api/train-detection-model", {
+        method: "POST"
+    })
+    .then(response => response.json())
+    .then(data => {
+        showNotification(data.message, data.success ? 'success' : 'error');
+    })
+    .catch(error => {
+        console.error("Error training model:", error);
+        showNotification('Error training model', 'error');
+    });
+}
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTime();
+        setInterval(updateTime, 1000);
+        fetchDashboardData();
+        fetchBlockedIPs();
+
+        // Refresh data button
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            fetchDashboardData();
+            showNotification('Dashboard data refreshed', 'success');
+        });
+
+        // Auto-refresh every 30 seconds
+        setInterval(fetchDashboardData, 30000);
+    });
+</script>
+
+
+</body>
+</html>

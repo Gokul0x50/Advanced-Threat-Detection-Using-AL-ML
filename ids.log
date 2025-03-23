@@ -1,0 +1,8 @@
+2025-01-08 13:13:18,625 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-01-08 13:13:18,626 - INFO - [33mPress CTRL+C to quit[0m
+2025-01-08 13:13:18,628 - INFO -  * Restarting with stat
+2025-01-08 13:13:19,149 - WARNING -  * Debugger is active!
+2025-01-08 13:13:19,151 - INFO -  * Debugger PIN: 162-161-846
+2025-01-08 13:16:57,963 - INFO -  * Detected change in 'C:\\Users\\pgoku\\PycharmProjects\\PythonProject1\\app.py', reloading
+2025-01-08 13:16:58,043 - INFO -  * Restarting with stat
