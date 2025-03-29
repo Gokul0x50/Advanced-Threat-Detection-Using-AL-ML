@@ -22,17 +22,259 @@
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 15px;
-            border-radius: 5px;
+            padding: 15px 20px;
+            border-radius: 8px;
             color: white;
             display: none;
             z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            font-weight: 500;
+            min-width: 300px;
+            max-width: 450px;
+            border-left: 5px solid rgba(255, 255, 255, 0.5);
         }
-        .notification.success { background-color: rgb(34, 197, 94); }
-        .notification.error { background-color: rgb(239, 68, 68); }
+        .notification.success {
+            background: linear-gradient(145deg, #10b981, #059669);
+        }
+        .notification.error {
+            background: linear-gradient(145deg, #ef4444, #b91c1c);
+        }
+        .notification.warning {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+        }
+        .notification-slide-in {
+            animation: slideIn 0.3s ease forwards;
+        }
+        .notification-fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+        /* Enhanced Button Styles */
+        .enhanced-btn {
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            cursor: pointer;
+        }
+        .attack-sim-btn {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border: 1px solid #e1e1e1;
+            color: #374151;
+            position: relative;
+            z-index: 1;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            justify-content: center;
+            padding: 1rem 1.25rem;
+        }
+        .attack-sim-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        .attack-sim-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .attack-sim-btn h3 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .attack-sim-btn p {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        /* Danger Button (Red) */
+        .danger-btn {
+            background: linear-gradient(145deg, #f87171, #dc2626);
+            color: white;
+        }
+        .danger-btn:hover {
+            background: linear-gradient(145deg, #ef4444, #b91c1c);
+        }
+        /* Primary Button (Blue) */
+        .primary-btn {
+            background: linear-gradient(145deg, #60a5fa, #3b82f6);
+            color: white;
+        }
+        .primary-btn:hover {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+        }
+        /* AI Button (Purple) */
+        .ai-btn {
+            background: linear-gradient(145deg, #a78bfa, #8b5cf6);
+            color: white;
+        }
+        .ai-btn:hover {
+            background: linear-gradient(145deg, #8b5cf6, #7c3aed);
+        }
+        /* Success Button (Green) */
+        .success-btn {
+            background: linear-gradient(145deg, #34d399, #10b981);
+            color: white;
+        }
+        .success-btn:hover {
+            background: linear-gradient(145deg, #10b981, #059669);
+        }
+        /* Warning Button (Amber) */
+        .warning-btn {
+            background: linear-gradient(145deg, #fbbf24, #f59e0b);
+            color: white;
+        }
+        .warning-btn:hover {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+        }
+        /* Button Icon Styling */
+        .btn-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+        }
+        /* Ripple Effect for Buttons */
+        .enhanced-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .enhanced-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 1;
+            }
+            20% {
+                transform: scale(25, 25);
+                opacity: 0.8;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(40, 40);
+            }
+        }
+        /* Block IP Button Style */
+        .block-ip-btn {
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* IP Access Control Input Group */
+        .ip-input-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .ip-input {
+            border-radius: 0.375rem;
+            border: 1px solid #e5e7eb;
+            padding: 0.5rem 0.75rem;
+            height: 40px;
+            transition: border-color 0.15s ease-in-out;
+            width: 100%;
+        }
+        .ip-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        /* Button hover indicator */
+        .hover-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+            border-radius: 0 0 0 8px;
+        }
+        /* Add a fancy gradient background to the page */
+        .bg-gradient {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            min-height: 100vh;
+        }
+        /* Add a glow effect to charts on hover */
+        .chart-container {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+        .chart-container:hover {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+        }
+        /* Add a pulse animation to the high severity counter */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        #high-severity {
+            animation: pulse 2s infinite;
+        }
+        /* Make the AI badges stand out */
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(145deg, #a78bfa, #8b5cf6);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        /* Special styling for AI-generated attack rows */
+        .ai-generated {
+            background-color: rgba(139, 92, 246, 0.05);
+        }
+        .ai-generated:hover {
+            background-color: rgba(139, 92, 246, 0.1);
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gradient">
     <!-- Notification Element -->
     <div id="notification" class="notification"></div>
 
@@ -104,7 +346,7 @@
         <!-- Charts Section -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <!-- Attack Types Chart -->
-            <div class="bg-white rounded-lg shadow">
+            <div class="bg-white rounded-lg shadow chart-container">
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Attack Distribution</h3>
                     <div class="h-64">
@@ -114,7 +356,7 @@
             </div>
 
             <!-- Severity Distribution Chart -->
-            <div class="bg-white rounded-lg shadow">
+            <div class="bg-white rounded-lg shadow chart-container">
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Severity Distribution</h3>
                     <div class="h-64">
@@ -148,72 +390,112 @@
             </div>
         </div>
 
-
-        <!-- Add this to your HTML for blocking controls -->
-<div class="bg-white rounded-lg shadow mt-8">
-    <div class="p-6">
-        <h2 class="text-lg font-medium text-gray-900 mb-4">IP Access Control</h2>
-        <div class="mb-4">
-            <input type="text" id="ip-to-block" placeholder="Enter IP address" class="border rounded px-3 py-2 mr-2">
-            <button onclick="blockIP()" class="bg-red-500 text-white px-4 py-2 rounded">Block IP</button>
+        <!-- Updated IP Access Control Section -->
+        <div class="bg-white rounded-lg shadow mt-8">
+            <div class="p-6">
+                <h2 class="text-lg font-medium text-gray-900 mb-4">IP Access Control</h2>
+                <div class="ip-input-group mb-4">
+                    <input type="text" id="ip-to-block" placeholder="Enter IP address" class="ip-input">
+                    <button onclick="blockIP()" class="enhanced-btn danger-btn block-ip-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd" />
+                        </svg>
+                        Block IP
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="blocked-ips-table" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="blocked-ips-table" class="bg-white divide-y divide-gray-200"></tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
-        <!-- Simulation Controls -->
+        <!-- Updated Attack Simulation Section -->
         <div class="bg-white rounded-lg shadow mt-8">
             <div class="p-6">
                 <h2 class="text-lg font-medium text-gray-900 mb-4">Attack Simulation</h2>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    <button onclick="simulateAttack('xss')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                    <!-- XSS Attack -->
+                    <button onclick="simulateAttack('xss')" class="attack-sim-btn enhanced-btn">
                         <h3 class="font-medium text-gray-900">XSS Attack</h3>
                         <p class="text-sm text-gray-500">Cross-site Scripting</p>
                     </button>
-                    <button onclick="simulateAttack('sql')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+
+                    <!-- SQL Injection -->
+                    <button onclick="simulateAttack('sql')" class="attack-sim-btn enhanced-btn">
                         <h3 class="font-medium text-gray-900">SQL Injection</h3>
                         <p class="text-sm text-gray-500">Database Attack</p>
                     </button>
-                    <button onclick="simulateAttack('ddos')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+
+                    <!-- DDoS Attack -->
+                    <button onclick="simulateAttack('ddos')" class="attack-sim-btn enhanced-btn">
                         <h3 class="font-medium text-gray-900">DDoS Attack</h3>
                         <p class="text-sm text-gray-500">Denial of Service</p>
                     </button>
-                    <button onclick="simulateAttack('bruteforce')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+
+                    <!-- Brute Force -->
+                    <button onclick="simulateAttack('bruteforce')" class="attack-sim-btn enhanced-btn">
                         <h3 class="font-medium text-gray-900">Brute Force</h3>
                         <p class="text-sm text-gray-500">Password Attack</p>
                     </button>
-                    <button onclick="simulateAttack('mitm')" class="attack-card bg-white border rounded-lg p-4 text-left hover:shadow-lg">
+
+                    <!-- MITM Attack -->
+                    <button onclick="simulateAttack('mitm')" class="attack-sim-btn enhanced-btn">
                         <h3 class="font-medium text-gray-900">MITM Attack</h3>
                         <p class="text-sm text-gray-500">Man in the Middle</p>
                     </button>
-                    <button onclick="simulateMultipleAttacks()" class="bg-red-500 text-white px-4 py-2 rounded shadow-md hover:bg-red-700">
-    Simulate 10 Attacks
-</button>
-                    <button onclick="clearLogs()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-800">
-    Clear Attack Logs
-</button>
-                    <button onclick="simulateAIAttack()" class="attack-card bg-indigo-50 border-indigo-200 border-2 rounded-lg p-4 text-left hover:shadow-lg">
-        <h3 class="font-medium text-indigo-900">AI Attack</h3>
-        <p class="text-sm text-indigo-500">Generate New Pattern</p>
-    </button>
-    <button onclick="simulateMultipleAIAttacks()" class="attack-card bg-purple-50 border-purple-200 border-2 rounded-lg p-4 text-left hover:shadow-lg">
-        <h3 class="font-medium text-purple-900">Multiple AI Attacks</h3>
-        <p class="text-sm text-purple-500">Generate 3 New Patterns</p>
-    </button>
-                    <!-- Add a button for AI model training -->
-    <button onclick="trainAIModel()" class="bg-indigo-600 text-white px-4 py-2 rounded">Train AI Detection Model</button>
+                </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Simulate 10 Attacks -->
+                    <button onclick="simulateMultipleAttacks()" class="enhanced-btn danger-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clip-rule="evenodd" />
+                        </svg>
+                        Simulate 10 Attacks
+                    </button>
 
+                    <!-- Clear Attack Logs -->
+                    <button onclick="clearLogs()" class="enhanced-btn danger-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        Clear Attack Logs
+                    </button>
+
+                    <!-- Train AI Model -->
+                    <button onclick="trainAIModel()" class="enhanced-btn ai-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                        </svg>
+                        Train AI Detection Model
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <!-- AI Attack -->
+                    <button onclick="simulateAIAttack()" class="enhanced-btn ai-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1z" clip-rule="evenodd" />
+                            <path d="M11 4a1 1 0 10-2 0v1a1 1 0 002 0V4zM10 7a1 1 0 011 1v1h2a1 1 0 110 2h-3a1 1 0 01-1-1V8a1 1 0 011-1zM16 9a1 1 0 100 2 1 1 0 000-2zM9 13a1 1 0 011-1h1a1 1 0 110 2v2a1 1 0 11-2 0v-3zM7 11a1 1 0 100-2H4a1 1 0 100 2h3z" />
+                        </svg>
+                        Generate AI Attack Pattern
+                    </button>
+
+                    <!-- Multiple AI Attacks -->
+                    <button onclick="simulateMultipleAIAttacks()" class="enhanced-btn ai-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                        </svg>
+                        Generate 3 New AI Patterns
+                    </button>
                 </div>
             </div>
         </div>
@@ -230,40 +512,88 @@
             document.getElementById('current-time').textContent = now.toLocaleString();
         }
 
-        // Add these functions to your JavaScript section
-function simulateAIAttack() {
-    fetch("/api/simulate/ai-attack", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({})
-    })
-    .then(response => response.json())
-    .then(data => {
-        showNotification(`AI Attack simulated: ${data.details.type} - ${data.severity} Severity`, 'success');
-        // Force immediate data update
-        fetchDashboardData();
-    })
-    .catch(error => {
-        console.error("Error simulating AI attack:", error);
-        showNotification('Error simulating AI attack', 'error');
-    });
-}
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
 
-function simulateMultipleAIAttacks() {
-    fetch("/api/generate-ai-attacks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ count: 3 })
-    })
-    .then(response => response.json())
-    .then(data => {
-        showNotification("3 AI attacks simulated!", 'success');
-        fetchDashboardData();  // Ensure dashboard updates after simulation
-    })
-    .catch(error => {
-        console.error("Error simulating AI attacks:", error);
+            // Create a new notification if it doesn't exist
+            if (!notification) {
+                const newNotification = document.createElement('div');
+                newNotification.id = 'notification';
+                newNotification.className = `notification ${type}`;
+                document.body.appendChild(newNotification);
+            }
+
+            // Set content and style
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+
+            // Add animation classes
+            notification.classList.add('notification-slide-in');
+
+            // Show the notification
+            notification.style.display = 'block';
+
+            // Remove after delay
+            setTimeout(() => {
+                notification.classList.add('notification-fade-out');
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                    notification.classList.remove('notification-slide-in', 'notification-fade-out');
+                }, 300);
+            }, 3000);
+        }
+
+        // Simulate an attack
+        function simulateAttack(type) {
+            fetch(`/api/simulate/${type}`, {
+                method: "POST"
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(`${data.message} - ${data.severity} Severity`, 'success');
+                // Force immediate data update
+                fetchDashboardData();
+            })
+            .catch(error => {
+                console.error("Error simulating attack:", error);
+                showNotification('Error simulating attack', 'error');
+            });
+        }
+
+        function simulateAIAttack() {
+            fetch("/api/simulate/ai-attack", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(`AI Attack simulated: ${data.details.type} - ${data.severity} Severity`, 'success');
+                // Force immediate data update
+                fetchDashboardData();
+            })
+            .catch(error => {
+                console.error("Error simulating AI attack:", error);
+                showNotification('Error simulating AI attack', 'error');
+            });
+        }
+
+        function simulateMultipleAIAttacks() {
+            fetch("/api/generate-ai-attacks", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ count: 3 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showNotification("3 AI attacks simulated!", 'success');
+                fetchDashboardData();  // Ensure dashboard updates after simulation
+            })
+            .catch(error => {
+                console.error("Error simulating AI attacks:", error);
         showNotification('Error simulating AI attacks', 'error');
     });
 }
